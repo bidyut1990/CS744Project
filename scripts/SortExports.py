@@ -1,14 +1,13 @@
 from pyspark import SparkConf, SparkContext, SQLContext 
+import sys
 
-DIR = '/home/username/Downloads/'
-dataDir = DIR+''
-file = dataDir+'export.csv'
-fileOut = dataDir+'sorted.csv'
+inputfile = sys.argv[1]
+outputfile = sys.argv[2]
 
 conf = SparkConf().setMaster("local").setAppName("TableData")
 sc = SQLContext(SparkContext(conf = conf))
 
-data = sc.read.csv(file, header='true')
+data = sc.read.csv(inputfile, header='true')
 data.createGlobalTempView('Table')
 
-sc.sql('''SELECT * FROM global_temp.Table ORDER BY cca2, timestamp''').coalesce(1).write.csv(fileOut)
+sc.sql('''SELECT * FROM global_temp.Table ORDER BY cca2, timestamp''').coalesce(1).write.csv(outputfile)
