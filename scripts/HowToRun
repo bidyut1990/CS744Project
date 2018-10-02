@@ -1,0 +1,1 @@
+./run.sh spark://128.104.222.61:7077 hdfs://128.104.222.61:9000/CS744/inputdata/enwiki-pages-articles/link-enwiki-20180601-pages-articles* hdfs://128.104.222.61:9000/CS744/outputdata/outputranks_bigsample1.txt
