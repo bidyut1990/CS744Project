@@ -74,7 +74,7 @@ elif FLAGS.job_name == "worker":
 
 	learning_rate = 0.003
 	batch_size = 30
-	iter_num = 1500
+	iter_num = 15
 
 	train_X, train_y = (mnist.train.images,mnist.train.labels)
 	test_X, test_y = (mnist.test.images,mnist.test.labels)
@@ -108,6 +108,6 @@ elif FLAGS.job_name == "worker":
 		train_acc.append(temp_train_acc)
 		test_acc.append(temp_test_acc)
 		# output
-		if (epoch + 1) % 300 == 0:
+		if (epoch + 1) % 3 == 0:
 			print('epoch: {:4d} loss: {:5f} train_acc: {:5f} test_acc: {:5f}'.format(epoch + 1, temp_loss,
 				temp_train_acc, temp_test_acc))
