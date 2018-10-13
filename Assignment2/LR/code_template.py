@@ -47,8 +47,7 @@ clusterSpec = {
     "cluster2": clusterSpec_cluster2
 }
 
-classCount = 10
-featureCount = 784
+
 
 clusterinfo = clusterSpec[FLAGS.deploy_mode]
 server = tf.train.Server(clusterinfo, job_name=FLAGS.job_name, task_index=FLAGS.task_index)
@@ -72,13 +71,17 @@ elif FLAGS.job_name == "worker":
 	prediction  = tf.nn.softmax(tf.matmul(data, W) + b)
 	loss = tf.reduce_mean(-tf.reduce_sum(target*tf.log(prediction), reduction_indices=1))
 
-	learning_rate = 0.003
-	batch_size = 30
-	iter_num = 1500
+	learning_rate = 0.5
+	#batch_size = 30
+	#iter_num = 15
 
 	train_X, train_y = (mnist.train.images,mnist.train.labels)
 	test_X, test_y = (mnist.test.images,mnist.test.labels)
-
+    classCount = train_y.shape[1]
+    featureCount = train_X.shape[1]
+    trainSize = train_X.shape[0]
+    print("Num features:",featureCount,"Num classes:", classCount)
+    print("Train size:",trainSize)
 	opt = tf.train.GradientDescentOptimizer(learning_rate)
 
 	goal = opt.minimize(loss)
@@ -89,25 +92,29 @@ elif FLAGS.job_name == "worker":
 	# Average
 	accuracy = tf.reduce_mean(correct)
 
-	loss_trace = []
-	train_acc = []
-	test_acc = []
+	#loss_trace = []
+	#train_acc = []
+	#test_acc = []
 
-	for epoch in range(iter_num):
+	#for epoch in range(iter_num):
+    for index in range(trainSize):
 		# Generate random batch index
-		batch_index = np.random.choice(len(train_X), size=batch_size)
-		batch_train_X = train_X[batch_index]
-		batch_train_y = np.matrix(train_y[batch_index])
-		sess.run(goal, feed_dict={data: batch_train_X, target: batch_train_y})
-		temp_loss = sess.run(loss, feed_dict={data: batch_train_X, target: batch_train_y})
+		#batch_index = np.random.choice(len(train_X), size=batch_size)
+		#batch_train_X = train_X[batch_index]
+		#batch_train_y = np.matrix(train_y[batch_index])
+        x,y = train_X[index], train_y[index]
+		sess.run(goal, feed_dict={data: [x], target: [y]})
+		#temp_loss = sess.run(loss, feed_dict={data: batch_train_X, target: batch_train_y})
 		# convert into a matrix, and the shape of the placeholder to correspond
-		temp_train_acc = sess.run(accuracy, feed_dict={data: train_X, target: np.matrix(train_y)})
-		temp_test_acc = sess.run(accuracy, feed_dict={data: test_X, target: np.matrix(test_y)})
+		#temp_train_acc = sess.run(accuracy, feed_dict={data: train_X, target: np.matrix(train_y)})
+		#temp_test_acc = sess.run(accuracy, feed_dict={data: test_X, target: np.matrix(test_y)})
 		# recode the result
-		loss_trace.append(temp_loss)
-		train_acc.append(temp_train_acc)
-		test_acc.append(temp_test_acc)
+		#loss_trace.append(temp_loss)
+		#train_acc.append(temp_train_acc)
+		#test_acc.append(temp_test_acc)
 		# output
-		if (epoch + 1) % 300 == 0:
-			print('epoch: {:4d} loss: {:5f} train_acc: {:5f} test_acc: {:5f}'.format(epoch + 1, temp_loss,
-				temp_train_acc, temp_test_acc))
+		#if (epoch + 1) % 3 == 0:
+		#	print('epoch: {:4d} loss: {:5f} train_acc: {:5f} test_acc: {:5f}'.format(epoch + 1, temp_loss,
+		#		temp_train_acc, temp_test_acc))
+    test_acc = sess.run(accuracy, feed_dict={data: test_X, target: test_y})
+    print("Test Set accuracy: ",test_acc)

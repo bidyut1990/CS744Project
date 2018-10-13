@@ -8,6 +8,7 @@ function terminate_cluster() {
     for i in `seq 0 3`; do
         ssh node-$i "$CMD"
     done
+    echo "Terminated"
 }
 
 
@@ -32,7 +33,7 @@ function start_cluster() {
         echo "Starting tensorflow servers on all hosts based on the spec in $1"
         echo "The server output is logged to serverlog-i.out, where i = 0, ..., 3 are the VM numbers."
         if [ "$2" = "single" ]; then
-            nohup ssh node-0 "cd ~/tf ; python $1 --deploy_mode=single > serverlog-0-py.out 2>&1&" > serverlog-0.out 2>&1&
+            nohup ssh node-0 "cd ~/tf ; python $1 --deploy_mode=single" > serverlog-0.out 2>&1
         elif [ "$2" = "cluster" ]; then
             nohup ssh node-0 "cd ~/tf ; python $1 --deploy_mode=cluster  --job_name=ps" > serverlog-ps-0.out 2>&1&
             nohup ssh node-0 "cd ~/tf ; python $1 --deploy_mode=cluster  --task_index=0" > serverlog-0.out 2>&1&
