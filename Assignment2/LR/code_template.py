@@ -75,6 +75,7 @@ elif FLAGS.job_name == "worker":
 	#batch_size = 30
 	#iter_num = 15
 
+
 	train_X, train_y = (mnist.train.images,mnist.train.labels)
 	test_X, test_y = (mnist.test.images,mnist.test.labels)
     classCount = train_y.shape[1]
