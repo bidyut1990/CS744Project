@@ -3,12 +3,12 @@ export TF_RUN_DIR="~/tf"
 
 function terminate_cluster() {
     echo "Terminating the servers"
-#    CMD="ps aux | grep -v 'grep' | grep 'python code_template' | awk -F' ' '{print $2}' | xargs kill -9"
-    CMD="ps aux | grep -v 'grep' | grep -v 'bash' | grep -v 'ssh' | grep 'python code*' | awk -F' ' '{print \$2}' | xargs kill -9"
+    CMDD="ps aux | grep -v 'grep' | grep 'python -um AlexNet.scripts.train --mode cluster' | awk -F' ' '{print \$2}' | xargs kill -9"
+    CMD="ps aux | grep -v 'grep' | grep -v 'bash' | grep -v 'ssh' | grep 'python startserver' | awk -F' ' '{print \$2}' | xargs kill -9"
+    ssh node-0 "$CMDD"
     for i in `seq 0 3`; do
-        ssh node-$i "$CMD" >> serverlog-ps-0.out 2>&1
+        ssh node-$i "$CMD"
     done
-    echo "Terminated"
 }
 
 
@@ -33,17 +33,18 @@ function start_cluster() {
         echo "Starting tensorflow servers on all hosts based on the spec in $1"
         echo "The server output is logged to serverlog-i.out, where i = 0, ..., 3 are the VM numbers."
         if [ "$2" = "single" ]; then
-            nohup ssh node-0 "cd ~/tf ; python $1 --deploy_mode=single" > serverlog-0.out 2>&1
+            nohup ssh node-0 "cd ~/tf ; python -u $1 --deploy_mode=single" > serverlog-0.out 2>&1
         elif [ "$2" = "cluster" ]; then
             nohup ssh node-0 "cd ~/tf ; python -u $1 --deploy_mode=cluster  --job_name=ps" > serverlog-ps-0.out 2>&1&
             nohup ssh node-0 "cd ~/tf ; python -u $1 --deploy_mode=cluster  --task_index=0" > serverlog-0.out 2>&1&
-            nohup ssh node-1 "cd ~/tf ; python -u $1 --deploy_mode=cluster  --task_index=1" > serverlog-1.out 2>&1
+            nohup ssh node-1 "cd ~/tf ; python -u $1 --deploy_mode=cluster  --task_index=1" > serverlog-1.out 2>&1&
         else
-            nohup ssh node-0 "cd ~/tf ; python $1 --deploy_mode=cluster2  --job_name=ps" > serverlog-ps-0.out 2>&1&
-            nohup ssh node-0 "cd ~/tf ; python $1 --deploy_mode=cluster2  --task_index=0" > serverlog-0.out 2>&1&
-            nohup ssh node-1 "cd ~/tf ; python $1 --deploy_mode=cluster2  --task_index=1" > serverlog-1.out 2>&1&
-            nohup ssh node-2 "cd ~/tf ; python $1 --deploy_mode=cluster2  --task_index=2" > serverlog-2.out 2>&1&
-            nohup ssh node-3 "cd ~/tf ; python $1 --deploy_mode=cluster2  --task_index=3" > serverlog-3.out 2>&1
+	    echo "in cluster2"
+            nohup ssh node-0 "cd ~/tf ; python -u $1 --deploy_mode=cluster2  --job_name=ps" > serverlog-ps-0.out 2>&1&
+            nohup ssh node-0 "cd ~/tf ; python -u $1 --deploy_mode=cluster2  --task_index=0" > serverlog-0.out 2>&1&
+            nohup ssh node-1 "cd ~/tf ; python -u $1 --deploy_mode=cluster2  --task_index=1" > serverlog-1.out 2>&1&
+            nohup ssh node-2 "cd ~/tf ; python -u $1 --deploy_mode=cluster2  --task_index=2" > serverlog-2.out 2>&1&
+            nohup ssh node-3 "cd ~/tf ; python -u $1 --deploy_mode=cluster2  --task_index=3" > serverlog-3.out 2>&1&
         fi
     fi
 }

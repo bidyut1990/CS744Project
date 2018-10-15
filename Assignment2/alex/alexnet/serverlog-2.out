@@ -1,0 +1,6 @@
+nohup: ignoring input
+2018-10-14 19:15:05.466794: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
+2018-10-14 19:15:05.472548: I tensorflow/core/distributed_runtime/rpc/grpc_channel.cc:222] Initialize GrpcChannelCache for job ps -> {0 -> 10.10.1.2:3333}
+2018-10-14 19:15:05.472580: I tensorflow/core/distributed_runtime/rpc/grpc_channel.cc:222] Initialize GrpcChannelCache for job worker -> {0 -> 10.10.1.2:2222, 1 -> 10.10.1.4:2222, 2 -> localhost:2222, 3 -> 10.10.1.1:2222}
+2018-10-14 19:15:05.476535: I tensorflow/core/distributed_runtime/rpc/grpc_server_lib.cc:381] Started server with target: grpc://localhost:2222
+bash: line 1: 78800 Killed                  python startserver.py --deploy_mode=cluster2 --task_index=2
