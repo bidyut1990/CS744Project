@@ -1,0 +1,13 @@
+Script started
+cluster
+2018-10-14 01:39:54.618764: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
+E1014 01:39:54.623699428   61587 server_chttp2.cc:40]        {"created":"@1539499194.623546382","description":"No address added out of total 1 resolved","file":"external/grpc/src/core/ext/transport/chttp2/server/chttp2_server.cc","file_line":307,"referenced_errors":[{"created":"@1539499194.623542178","description":"Failed to add any wildcard listeners","file":"external/grpc/src/core/lib/iomgr/tcp_server_posix.cc","file_line":324,"referenced_errors":[{"created":"@1539499194.6bash: line 1: 61162 Killed                  python -u code_sync.py --deploy_mode=cluster --job_name=ps
+p_server_utils_posix_common.cc","file_line":214,"referenced_errors":[{"created":"@1539499194.623518408","description":"OS Error","errno":98,"file":"external/grpc/src/core/lib/iomgr/tcp_server_utils_posix_common.cc","file_line":187,"os_error":"Address already in use","syscall":"bind"}]},{"created":"@1539499194.623541390","description":"Unable to configure socket","fd":5,"file":"external/grpc/src/core/lib/iomgr/tcp_server_utils_posix_common.cc","file_line":214,"referenced_errors":[{"created":"@1539499194.623537715","description":"OS Error","errno":98,"file":"external/grpc/src/core/lib/iomgr/tcp_server_utils_posix_common.cc","file_line":187,"os_error":"Address already in use","syscall":"bind"}]}]}]}
+Traceback (most recent call last):
+  File "code_sync.py", line 52, in <module>
+    server = tf.train.Server(clusterinfo, job_name=FLAGS.job_name, task_index=FLAGS.task_index)
+  File "/usr/local/lib/python2.7/dist-packages/tensorflow/python/training/server_lib.py", line 148, in __init__
+    self._server_def.SerializeToString(), status)
+  File "/usr/local/lib/python2.7/dist-packages/tensorflow/python/framework/errors_impl.py", line 526, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.UnknownError: Could not start gRPC server
